@@ -96,3 +96,40 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Docker / Portainer
+
+Quick steps to build, tag, and push an image (replace <YOUR_DOCKERHUB_USERNAME>):
+
+```bash
+# build locally
+docker build -t <YOUR_DOCKERHUB_USERNAME>/payment-microservice:latest .
+
+# login (Docker Hub)
+docker login
+
+# push
+docker push <YOUR_DOCKERHUB_USERNAME>/payment-microservice:latest
+```
+
+Portainer deployment options:
+- Option A (pull image): In Portainer go to "Images -> Pull an image" and pull `docker.io/<YOUR_DOCKERHUB_USERNAME>/payment-microservice:latest`.
+- Option B (stack): Create a new Stack in Portainer and paste the `docker-compose.yml` from this repo (set the `image` field to the pushed image or leave the `build` section to build on the host).
+
+Notes:
+- The application listens on port 3000 by default. The compose file maps `3000:3000`.
+- Replace `<YOUR_DOCKERHUB_USERNAME>` with your registry/namespace. For GitHub Container Registry or other registries, adjust the image name accordingly (for example `ghcr.io/ORG/payment-microservice:latest`).
+
+### CI / CD (GitHub Actions)
+
+A sample GitHub Actions workflow is included at `.github/workflows/docker-publish.yml` that builds and pushes the image to Docker Hub when code is pushed to `main`/`master`.
+
+Required repository secrets:
+- **DOCKERHUB_USERNAME** — your Docker Hub username.
+- **DOCKERHUB_TOKEN** — a Docker Hub access token (or password). Create a token at https://hub.docker.com/settings/security.
+
+How it works:
+- On push, the workflow builds a multi-arch image using the repository `Dockerfile` and pushes `docker.io/<YOUR_DOCKERHUB_USERNAME>/payment-microservice:latest`.
+- In Portainer you can then pull `docker.io/<YOUR_DOCKERHUB_USERNAME>/payment-microservice:latest` or point a Stack to that image.
+
+
