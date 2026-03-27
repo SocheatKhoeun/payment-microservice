@@ -10,16 +10,16 @@ export class PaymentController {
 
   @Post('transaction')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Create Bakong transaction providing merchant params' })
+  @ApiOperation({ summary: 'Create transaction' })
   @ApiBody({ schema: { example: { merchantId: '123456789', merchantName: 'My Store', accountAddress: 'Phnom Penh', acquiringBank: 'Acquiring Bank Name', currency: 'KHR', amount: 1000 } } })
-  @ApiResponse({ status: 200, description: 'QR transaction created successfully' })
+  @ApiResponse({ status: 200, description: 'Transaction created successfully' })
   async createTransaction(@Body() input: QRPaymentRequestModel, @Request() req): Promise<any> {
     return await this.paymentService.createTransaction(input);
   }
 
   @Post('transaction/status')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Check Bakong Transaction Status by MD5' })
+  @ApiOperation({ summary: 'Check Transaction Status by MD5' })
   @ApiBody({ schema: { example: { md5: 'fb841aeba296ec19cefaf72392d5527a', bakongEndpoint: 'domain', bakongToken: 'qwerty' } } })
   @ApiResponse({
     status: 200,
